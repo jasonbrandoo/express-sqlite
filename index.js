@@ -10,6 +10,7 @@ const PORT = 3001;
 const key = 'SUPER_DUPER_FUCKING_SECRET';
 
 app.use(express.json());
+app.use(cors());
 
 const withAuth = (req, res, next) => {
   const header = req.headers;
