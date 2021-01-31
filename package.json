@@ -1,0 +1,20 @@
+{
+  "name": "express-server",
+  "version": "1.0.0",
+  "description": "simple express boilerplate",
+  "main": "index.js",
+  "author": "Jason Brando <jasonbrandoo@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "sqlite3": "^5.0.1"
+  }
+}
