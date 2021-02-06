@@ -1,0 +1,294 @@
+paths:
+  /api/v1/login:
+    post:
+      tags:
+        - Users
+      summary: Sign in user.
+      consumes:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        200:
+          description: Success
+  /api/v1/register:
+    post:
+      tags:
+        - Users
+      summary: Create user.
+      consumes:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+      responses:
+        200:
+          description: Success
+  /api/v1/items:
+    get:
+      tags:
+        - Items
+      summary: List of all items
+      responses:
+        200:
+          description: Array of items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemGet'
+    post:
+      tags:
+        - Items
+      summary: Create new item
+      consumes:
+        - application/json
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemPost'
+      responses:
+        200:
+          description: Created item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: string
+  /api/v1/items/{id}:
+    put:
+      tags:
+        - Items
+      summary: Update one item
+      consumes:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemPut'
+      responses:
+        200:
+          description: Updated item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: string
+    delete:
+      tags:
+        - Items
+      summary: Delete one item
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PathId'
+      responses:
+        200:
+          description: Deleted item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: string
+  # ITEM TYPE
+  /api/v1/items/type:
+    get:
+      tags:
+        - Types
+      summary: List of all item types
+      responses:
+        200:
+          description: Array of types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemTypeGet'
+    post:
+      tags:
+        - Types
+      summary: Create new type
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemTypePost'
+      responses:
+        200:
+          description: Create new type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: string
+  /api/v1/items/type/{id}:
+    put:
+      tags:
+        - Types
+      summary: Update type
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PathId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemTypePut'
+      responses:
+        200:
+          description: Updated item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: string
+    delete:
+      tags:
+        - Types
+      summary: Delete type
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PathId'
+      responses:
+        200:
+          description: Deleted item
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: string
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    PathId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  schemas:
+    # ITEMS
+    ItemGet:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          type:
+            type: string
+          price:
+            type: integer
+    ItemPost:
+      type: object
+      properties:
+        name:
+          type: string
+        id_type:
+          type: integer
+        price:
+          type: integer
+    ItemPut:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        price:
+          type: integer
+    # TYPES
+    ItemTypeGet:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+    ItemTypePost:
+      type: object
+      properties:
+        name:
+          type: string
+    ItemTypePut:
+      type: object
+      properties:
+        name:
+          type: string
+    # USERS
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Register:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password1:
+          type: string
+        password2:
+          type: string
+
+tags:
+  - name: Users
+  - name: Items
+  - name: Types
