@@ -20,7 +20,6 @@ const register = (req, res) => {
   }
   bcrypt.genSalt(10, (err, salt) => {
     if (err) {
-      console.log(err);
       return res.status(400).json({
         message: 'error',
         data: err,
@@ -28,7 +27,6 @@ const register = (req, res) => {
     }
     bcrypt.hash(password1, salt, async (hashErr, hash) => {
       if (hashErr) {
-        console.log(hashErr);
         return res.status(400).json({
           message: 'error',
           data: hashErr,
@@ -68,7 +66,6 @@ const register = (req, res) => {
 
 const login = async (req, res) => {
   const { username, password } = req.body;
-  console.log(username, password);
   if (username === undefined || password === undefined) {
     return res.status(400).json({
       message: 'error',
@@ -77,26 +74,31 @@ const login = async (req, res) => {
   }
   try {
     const user = await User.findOne({ where: { username } });
-    bcrypt.compare(password, user.password, (compareErr) => {
+    bcrypt.compare(password, user.password, (compareErr, compareResult) => {
       if (compareErr) {
-        console.log(compareErr);
         return res.status(400).json({
           message: 'error',
           data: compareErr,
         });
+      } else if (compareResult) {
+        const token = jwt.sign({ id: user.id_user }, 'secret', {
+          expiresIn: '15m',
+        });
+        // res.cookie('token', token, {
+        //   httpOnly: true,
+        //   sameSite: 'none',
+        // });
+        return res.status(200).json({
+          message: 'success',
+          data: 'Login success',
+          token,
+        });
+      } else {
+        return res.status(400).json({
+          message: 'error',
+          data: 'User not found',
+        });
       }
-      const token = jwt.sign({ id: user.id_user }, 'secret', {
-        expiresIn: '15m',
-      });
-      // res.cookie('token', token, {
-      //   httpOnly: true,
-      //   sameSite: 'none',
-      // });
-      return res.status(200).json({
-        message: 'success',
-        data: 'Login success',
-        token,
-      });
     });
   } catch (err) {
     return res.status(400).json({

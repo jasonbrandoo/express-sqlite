@@ -3,7 +3,7 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 
-const { initDb, sequelize, DataTypes } = require('./config/database');
+const { initDb } = require('./config/database');
 const route = require('./route');
 
 const options = {
