@@ -69,6 +69,21 @@ paths:
                     type: string
                   data:
                     type: string
+  /api/v1/items/get:
+    get:
+      tags:
+        - Items
+      summary: Search item by name or type
+      parameters:
+        - $ref: '#/components/parameters/QueryName'
+        - $ref: '#/components/parameters/QueryType'
+      responses:
+        200:
+          description: Array of items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemGet'
   /api/v1/items/{id}:
     put:
       tags:
@@ -209,6 +224,18 @@ components:
       type: http
       scheme: bearer
   parameters:
+    QueryName:
+      in: query
+      name: name
+      required: true
+      schema:
+        type: string
+    QueryType:
+      in: query
+      name: type
+      required: true
+      schema:
+        type: string
     PathId:
       in: path
       name: id

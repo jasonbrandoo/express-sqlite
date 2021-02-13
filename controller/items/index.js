@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Item, Type } = require('../../model/items');
 
 const getItems = async (req, res) => {
@@ -10,6 +11,50 @@ const getItems = async (req, res) => {
       data,
     });
   } catch (err) {
+    return res.status(400).json({
+      message: 'error',
+      data: err,
+    });
+  }
+};
+
+const searchItems = async (req, res) => {
+  try {
+    const { name, type } = req.query;
+    const data = await Item.findAll({
+      include: [
+        {
+          model: Type,
+          as: 'type',
+        },
+      ],
+      where: {
+        [Op.or]: [
+          {
+            name: {
+              [Op.startsWith]: name,
+            },
+          },
+          {
+            '$type.name$': {
+              [Op.startsWith]: type,
+            },
+          },
+        ],
+      },
+    });
+    if (data.length === 0) {
+      return res.status(200).json({
+        message: 'success',
+        data: 'Data not found',
+      });
+    }
+    return res.status(200).json({
+      message: 'success',
+      data,
+    });
+  } catch (err) {
+    console.log(err);
     return res.status(400).json({
       message: 'error',
       data: err,
@@ -96,6 +141,35 @@ const getItemsType = async (req, res) => {
   }
 };
 
+const searchItemsType = async (req, res) => {
+  try {
+    const { name } = req.query;
+    const data = await Type.findAll({
+      where: {
+        name: {
+          [Op.startsWith]: name,
+        },
+      },
+    });
+    if (data.length === 0) {
+      return res.status(200).json({
+        message: 'success',
+        data: 'Data not found',
+      });
+    }
+    return res.status(200).json({
+      message: 'success',
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      message: 'error',
+      data: err,
+    });
+  }
+};
+
 const postItemsType = async (req, res) => {
   const { name } = req.body;
   try {
@@ -162,10 +236,12 @@ const deleteItemsType = async (req, res) => {
 
 module.exports = {
   getItems,
+  searchItems,
   postItems,
   putItems,
   deleteItems,
   getItemsType,
+  searchItemsType,
   postItemsType,
   putItemsType,
   deleteItemsType,

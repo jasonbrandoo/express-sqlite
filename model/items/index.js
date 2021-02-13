@@ -13,10 +13,16 @@ const Item = sequelize.define(
         model: 'Type',
         key: 'id_type',
       },
+      validate: {
+        isInt: true,
+      },
     },
     price: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        isInt: true,
+      },
     },
   },
   {
