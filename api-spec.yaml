@@ -170,6 +170,20 @@ paths:
                     type: string
                   data:
                     type: string
+  /api/v1/items/type/get:
+    get:
+      tags:
+        - Types
+      summary: Search name by name
+      parameters:
+        - $ref: '#/components/parameters/QueryName'
+      responses:
+        200:
+          description: Array of items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemTypeGet'
   /api/v1/items/type/{id}:
     put:
       tags:
